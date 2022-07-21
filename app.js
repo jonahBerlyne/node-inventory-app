@@ -7,6 +7,7 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 
 const indexRouter = require('./routes/index');
+const catalogRouter = require('./routes/catalogRoutes');
 
 const app = express();
 
@@ -33,6 +34,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
+app.use('/catalog', catalogRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
