@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <title>
+   <%= title %>
+  </title>
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+ </head>
+ <body>
+  <%- include('./layout.ejs') %>
+   <div class="col-sm-10">
+    <h1>
+     <%- item.name %>
+    </h1>
+    <p>
+     <%- item.description %>
+    </p>
+    <p><strong>Price:</strong>
+     $<%- item.price %>
+    </p>
+    <p><strong>Number in Stock:</strong>
+     <%- item.number_in_stock %>
+    </p>
+    <p>
+     <strong>Category:</strong>
+     <% item.category.forEach(category => { %>
+      <a href=<%- category.url %> > <%- category.name %></a>
+     <% }) %>
+    </p>
+    <div>
+     <hr>
+     <p>
+      <a href=<%- `${item.url}/update` %>>Update Item</a>
+     </p>
+     <p>
+      <a href=<%- `${item.url}/delete` %>>Delete Item</a>
+     </p>
+    </div>
+ </body>
+</html>

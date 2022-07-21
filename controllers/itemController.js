@@ -3,17 +3,17 @@ const Item = require('../models/itemModel');
 const async = require('async');
 const { body, validationResult } = require('express-validator');
 
-const item_list = (req, res, next) => {
- Item.find({}, 'name category')
+const items_list = (req, res, next) => {
+ Item.find({}, 'name price')
      .sort({ name: 1 })
-     .populate('category')
+     .populate('price')
      .exec(function (err, list_items) {
       if (err) {
        return next(err);
       }
-      res.render('item_list', {
-       title: 'Item List',
-       item_list: list_items
+      res.render('items_list', {
+       title: 'Items List',
+       items_list: list_items
       });
      });
 }
@@ -38,13 +38,14 @@ const create_item_get = (req, res, next) => {
  );
 }
 
-const create_item_post = (req, res, next) => [
+const create_item_post = [
  (req, res, next) => {
   if (!(req.body.category instanceof Array)) {
    if (typeof req.body.category === "undefined") {
     req.body.category = [];
    } else {
     req.body.category = new Array(req.body.category);
+    console.log(1);
    }
   }
   next();
@@ -166,7 +167,7 @@ const update_item_get = (req, res, next) => {
      }
     }
    }
-   res.render('update_item', {
+   res.render('item_form', {
     title: "Update",
     categories: results.categories,
     item: results.item,
@@ -176,7 +177,7 @@ const update_item_get = (req, res, next) => {
  );
 }
 
-const update_item_put = [
+const update_item_post = [
  (req, res, next) => {
   if (!(Array.isArray(req.body.category))) {
    if (typeof req.body.category === "undefined") {
@@ -214,7 +215,8 @@ const update_item_put = [
    description: req.body.description,
    category: (typeof req.body.category === 'undefined') ? [] : req.body.category,
    price: req.body.price,
-   number_in_stock: req.body.number_in_stock
+   number_in_stock: req.body.number_in_stock,
+   _id: req.params.id
   });
 
   if (!errors.isEmpty()) {
@@ -232,7 +234,7 @@ const update_item_put = [
        results.categories[i].checked = 'true';
       }
      }
-     res.render('update_item', {
+     res.render('item_form', {
       title: 'Update',
       categories: results.categories,
       item,
@@ -242,11 +244,11 @@ const update_item_put = [
    );
    return;
   } else {
-   Item.findByIdAndUpdate(req.params.id, item, {}, function (err, _item) {
+   Item.findByIdAndUpdate(req.params.id, item, {}, function (err) {
     if (err) {
      return next(err);
     }
-    res.redirect(_item.url);
+    res.redirect(item.url);
    });
   }
  }
@@ -269,7 +271,7 @@ const delete_item_get = (req, res, next) => {
     err.status = 404;
     return next(err);
    }
-   res.render("delete_item", {
+   res.render("item_delete", {
     title: "Delete",
     item: results.item 
    });
@@ -277,25 +279,26 @@ const delete_item_get = (req, res, next) => {
  );
 }
 
-const delete_item_delete = (req, res, next, err) => {
- if (err) {
-  return next(err);
- }
- Item.findByIdAndRemove(req.body.itemid, function (err) {
-  if (err) {
-   return next(err);
-  }
-  res.redirect("/catalog/items");
- });
-}
+const delete_item_post = (req, res, next) => {
+  Item.findById(req.params.id)
+      .exec(function (err) {
+        if (err) return next(err);
+        Item.findByIdAndRemove(req.body.itemid, (err) => {
+            if (err) {
+              return next(err);
+            }
+            res.redirect("/catalog/items");
+        });
+      });
+};
 
 module.exports = {
- item_list,
+ items_list,
  create_item_get,
  create_item_post,
  item_detail,
  update_item_get,
- update_item_put,
+ update_item_post,
  delete_item_get,
- delete_item_delete
+ delete_item_post
 }

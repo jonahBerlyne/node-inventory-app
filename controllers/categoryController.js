@@ -31,16 +31,12 @@ const create_category_post = [
   .trim()
   .isLength({ min: 1 })
   .escape()
-  .withMessage('Name must be specified.')
-  .isAlphanumeric()
-  .withMessage('Name has non-alphanumeric characters.'),
+  .withMessage('Name must be specified.'),
  body('description')
   .trim()
   .isLength({ min: 1 })
   .escape()
-  .withMessage('Description must be specified.')
-  .isAlphanumeric()
-  .withMessage('Description has non-alphanumeric characters.'),
+  .withMessage('Description must be specified.'),
 
  (req, res, next) => {
   const errors = validationResult(req);
@@ -105,7 +101,7 @@ const update_category_get = (req, res, next) => {
            err.status = 404;
            return next(err);
           }
-          res.render("update_category", {
+          res.render("category_form", {
            title: "Update Category",
            category,
            errors: undefined
@@ -113,21 +109,17 @@ const update_category_get = (req, res, next) => {
          });
 }
 
-const update_category_put = [
+const update_category_post = [
  body('name')
   .trim()
   .isLength({ min: 1 })
   .escape()
-  .withMessage('Name must be specified.')
-  .isAlphanumeric()
-  .withMessage('Name has non-alphanumeric characters.'),
+  .withMessage('Name must be specified.'),
  body('description')
   .trim()
   .isLength({ min: 1 })
   .escape()
-  .withMessage('Description must be specified.')
-  .isAlphanumeric()
-  .withMessage('Description has non-alphanumeric characters.'),
+  .withMessage('Description must be specified.'),
 
  (req, res, next) => {
   const errors = validationResult(req);
@@ -172,7 +164,7 @@ const delete_category_get = (req, res, next) => {
    if (results.category === null) {
     res.redirect('/catalog/categories');
    }
-   res.render('delete_category', {
+   res.render('category_delete', {
     title: 'Delete',
     category: results.category,
     category_items: results.category_items
@@ -181,7 +173,7 @@ const delete_category_get = (req, res, next) => {
  );
 }
 
-const delete_category_delete = (req, res, next) => {
+const delete_category_post = (req, res, next) => {
  async.parallel(
   {
    category(callback) {
@@ -219,7 +211,7 @@ module.exports = {
  create_category_post,
  category_detail,
  update_category_get,
- update_category_put,
+ update_category_post,
  delete_category_get,
- delete_category_delete
+ delete_category_post
 }

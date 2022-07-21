@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <title>
+   <%= title %>
+  </title>
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+ </head>
+ <body>
+  <%- include('./layout.ejs') %>
+   <h1>
+    <%= title %>
+   </h1>
+   <ul>
+    <% if (categories_list.length > 0) { %>
+     <% categories_list.forEach(category => { %>
+       <li>
+        <a href=<%- category.url %>>
+         <%= category.name %>
+        </a>
+       </li>
+     <% }); %>
+    <% } else { %>
+       <li>
+        <p>There are no categories.</p>
+       </li>
+    <% } %>
+   </ul>
+ </body>
+</html>

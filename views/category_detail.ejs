@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <title>
+   <%= title %>
+  </title>
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+ </head>
+ <body>
+  <%- include('./layout.ejs') %>
+   <h1>
+    <%= category.name %>
+   </h1>
+   <h6>
+    <%= category.description %>
+   </h6>
+   <div style="margin-left: 20px; margin-top: 20px;">
+    <h4>Items:</h4>
+    <ul>
+     <% if (category_items.length > 0) { %>
+      <% category_items.forEach(item => { %>
+       <a href=<%- item.url %>><%= item.name %></a>
+       <p>
+        $<%= item.price %>
+       </p>
+      <% }); %>
+     <% } else { %>
+       <li>
+        <p>This category has no items.</p>
+       </li>
+     <% } %>
+    </ul>
+    <hr>
+    <p>
+     <a href=<%- `${category.url}/update` %>>Update Category</a>
+    </p>
+    <p>
+     <a href=<%- `${category.url}/delete` %>>Delete Category</a>
+    </p>
+   </div>
+ </body>
+</html>
